@@ -1,45 +1,1258 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>LokerBangkoID</title>
-
+    <title>LokerBangkoid - Posting Lowongan & Endorse Iklan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* CSS lama kamu di sini */
+        :root {
+            --bg: #0a0f1a;
+            --bg-secondary: #111827;
+            --fg: #f1f5f9;
+            --muted: #94a3b8;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --card: #1e293b;
+            --border: #334155;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Background Effect */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(16, 185, 129, 0.1), transparent);
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Card styles */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-copy {
+            background: var(--bg-secondary);
+            color: var(--fg);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-copy:hover {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        .btn-copy.copied {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* Package cards */
+        .package-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-card.featured {
+            border-color: var(--accent);
+        }
+
+        .package-card.featured::before {
+            content: 'POPULER';
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: var(--accent);
+            color: var(--bg);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 40px;
+            transform: rotate(45deg);
+            z-index: 10;
+        }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Bank item */
+        .bank-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .bank-item:hover {
+            border-color: var(--accent);
+        }
+
+        /* QRIS container */
+        .qris-container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            display: inline-block;
+        }
+
+        /* Navigation */
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent);
+            color: var(--bg);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tab styles */
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-btn:hover {
+            color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form styles */
+        .form-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--fg);
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: var(--muted);
+        }
+
+        /* Accordion */
+        .accordion-header {
+            width: 100%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: var(--fg);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            border-color: var(--accent);
+        }
+
+        .accordion-header.active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-color: transparent;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.open {
+            max-height: 500px;
+        }
+
+        /* WhatsApp button floating */
+        .wa-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .wa-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        /* Feature icon */
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .price-tag {
+                font-size: 1.5rem;
+            }
+            
+            .package-card.featured::before {
+                font-size: 10px;
+                padding: 3px 30px;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
-
 <body>
+    <!-- Background Effects -->
+    <div class="bg-pattern"></div>
+    <div class="grid-bg"></div>
+    <div id="particles"></div>
 
-    <!-- NAVBAR LAMA -->
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Berhasil disalin!</div>
 
-    <!-- HERO LAMA -->
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-90 backdrop-blur-lg" style="background: rgba(10, 15, 26, 0.9);">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold" style="font-family: 'Space Grotesk', sans-serif;">
+                <span style="color: var(--accent);">Loker</span>Bangkoid
+            </a>
+            <div class="hidden md:flex items-center gap-2">
+                <a href="#loker" class="nav-link">Posting Loker</a>
+                <a href="#endorse" class="nav-link">Endorse & Iklan</a>
+                <a href="#pembayaran" class="nav-link">Pembayaran</a>
+                <a href="#konfirmasi" class="nav-link">Konfirmasi</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+            </div>
+            <a href="https://wa.link/g2qgmc" target="_blank" class="btn-primary text-sm">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Hubungi Kami
+            </a>
+        </div>
+    </nav>
 
-    <!-- STATISTIK LAMA -->
+    <!-- Hero Section -->
+    <header class="min-h-screen flex items-center justify-center pt-20 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="reveal mb-6">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-medium" style="background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent);">
+                    Platform Loker Terpercaya
+                </span>
+            </div>
+            <h1 class="reveal text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                Pasang Lowongan Kerja dengan Mudah dan Terpercaya
+            </h1>
+            <p class="reveal text-lg md:text-xl mb-8" style="color: var(--muted);">
+                Pasang informasi lowongan kerja di Instagram <strong>@lokerbangkoid</strong> dan jangkau pencari kerja di Bangko, Merangin dan sekitarnya.
+            </p>
+            <div class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#loker" class="btn-primary text-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Lihat Layanan Loker
+                </a>
+                <a href="#endorse" class="btn-secondary text-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    Lihat Paket Endorse
+                </a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="reveal grid grid-cols-3 gap-6 mt-16">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold" style="color: var(--accent);">27K+</div>
+                    <div style="color: var(--muted);">Followers</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold" style="color: var(--accent);">275K+</div>
+                    <div style="color: var(--muted);">Tayangan / 30 Hari</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold" style="color: var(--accent);">2.400+</div>
+                    <div style="color: var(--muted);">Postingan</div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <!-- BARU DI SINI -->
+    <!-- Social Links -->
+    <section class="py-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal card p-6 md:p-8">
+                <h3 class="text-xl font-bold mb-6 text-center">Ikuti Kami di Sosial Media</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="https://www.instagram.com/lokerbangkoid/" target="_blank" class="btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        Instagram
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61556746500283" target="_blank" class="btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Facebook
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- POSTING LOWONGAN KERJA -->
-    <section id="loker">
-        ...
+    <section id="loker" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4"
+                    style="background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent);">
+                    KHUSUS LOWONGAN KERJA
+                </span>
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-4">Posting Lowongan Kerja</h2>
+                <p class="reveal max-w-2xl mx-auto" style="color: var(--muted);">
+                    Pasang informasi lowongan kerja Anda di Instagram <strong>@lokerbangkoid</strong>
+                    dan jangkau pencari kerja di Bangko, Merangin dan sekitarnya.
+                </p>
+            </div>
+
+            <div class="max-w-xl mx-auto">
+                <div class="reveal card package-card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <line x1="8" y1="8" x2="16" y2="8"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                            <line x1="8" y1="16" x2="13" y2="16"/>
+                        </svg>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-2">Posting Lowongan</h3>
+                    <p class="mb-4" style="color: var(--muted);">
+                        Cocok untuk perusahaan atau HR yang ingin memasang informasi lowongan kerja.
+                    </p>
+
+                    <div class="price-tag mb-8">
+                        Rp25.000
+                        <span class="text-base font-normal" style="color: var(--muted);">/ lowongan</span>
+                    </div>
+
+                    <ul class="space-y-4 mb-8 text-left">
+                        <li class="flex items-start gap-3">
+                            <svg class="flex-shrink-0 mt-1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+                            <span>1× Feed Instagram</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="flex-shrink-0 mt-1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+                            <span>1× Instagram Story selama 24 jam</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="flex-shrink-0 mt-1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+                            <span>Postingan feed tetap tersedia</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="flex-shrink-0 mt-1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+                            <span>Materi dan informasi lowongan dari pemasang</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="flex-shrink-0 mt-1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+                            <span>Posting sesuai jadwal/antrean yang tersedia</span>
+                        </li>
+                    </ul>
+
+                    <a href="#konfirmasi" class="btn-primary w-full justify-center">Pasang Lowongan</a>
+                    <p class="text-sm mt-5" style="color: var(--muted);">
+                        Harga Rp25.000 khusus untuk posting informasi lowongan kerja.
+                    </p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- ENDORSE & IKLAN -->
-    <section id="endorse">
-        ...
+    <section id="endorse" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4"
+                    style="background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid var(--warning);">
+                    PROMOSI & ENDORSE
+                </span>
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-4">Paket Endorse & Iklan</h2>
+                <p class="reveal max-w-2xl mx-auto" style="color: var(--muted);">
+                    Untuk promosi produk, jasa, brand, UMKM, event, bisnis, dan kebutuhan iklan lainnya.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Story Only -->
+                <div class="reveal card package-card p-6">
+                    <h3 class="text-xl font-bold mb-2">Paket Story Only</h3>
+                    <p class="text-sm mb-4" style="color: var(--muted);">Promosi melalui Instagram Story</p>
+                    <div class="price-tag mb-6">Rp100.000</div>
+                    <ul class="space-y-3 mb-6">
+                        <li>✓ 1–2× Story promosi</li>
+                        <li>✓ Durasi Story 24 jam</li>
+                        <li>✓ Mention/tag akun brand</li>
+                        <li>✓ Bisa masuk Highlight</li>
+                    </ul>
+                    <a href="#konfirmasi" class="btn-secondary w-full justify-center">Pilih Paket</a>
+                </div>
+
+                <!-- Feed Only -->
+                <div class="reveal card package-card p-6">
+                    <h3 class="text-xl font-bold mb-2">Paket Feed Only</h3>
+                    <p class="text-sm mb-4" style="color: var(--muted);">Fokus promosi melalui Feed</p>
+                    <div class="price-tag mb-6">Rp150.000</div>
+                    <ul class="space-y-3 mb-6">
+                        <li>✓ 1× Feed Post</li>
+                        <li>✓ Tayang 5–7 hari</li>
+                        <li>✓ Mention/tag akun brand</li>
+                        <li>✓ Opsional masuk Highlight</li>
+                    </ul>
+                    <a href="#konfirmasi" class="btn-secondary w-full justify-center">Pilih Paket</a>
+                </div>
+
+                <!-- Growth -->
+                <div class="reveal card package-card featured p-6">
+                    <h3 class="text-xl font-bold mb-2">Paket Growth</h3>
+                    <p class="text-sm mb-4" style="color: var(--muted);">Untuk promosi dengan exposure lebih luas</p>
+                    <div class="price-tag mb-6">Rp250.000</div>
+                    <ul class="space-y-3 mb-6">
+                        <li>✓ 1× Feed Post</li>
+                        <li>✓ Tayang hingga 5 hari</li>
+                        <li>✓ 3× Story promosi</li>
+                        <li>✓ Jadwal Story berbeda</li>
+                        <li>✓ Highlight permanen</li>
+                    </ul>
+                    <a href="#konfirmasi" class="btn-primary w-full justify-center">Pilih Paket</a>
+                </div>
+
+                <!-- Ultimate -->
+                <div class="reveal card package-card p-6 md:col-span-2 lg:col-span-3">
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="flex-1">
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3" style="background: var(--warning); color: var(--bg);">PREMIUM</span>
+                            <h3 class="text-2xl font-bold mb-2">Paket Ultimate</h3>
+                            <p class="mb-4" style="color: var(--muted);">Paket lengkap untuk exposure maksimal</p>
+                            <div class="price-tag mb-6">Rp500.000</div>
+                        </div>
+                        <div class="flex-1">
+                            <ul class="space-y-3 mb-6">
+                                <li>✓ 2× Feed Post</li>
+                                <li>✓ Tayang hingga 7 hari</li>
+                                <li>✓ 5–7× Story promosi</li>
+                                <li>✓ Jadwal Story berbeda</li>
+                                <li>✓ Highlight permanen</li>
+                                <li>✓ Postingan dapat dipin selama periode tayang</li>
+                            </ul>
+                            <a href="#konfirmasi" class="btn-primary w-full md:w-auto justify-center">Pilih Paket Ultimate</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
 
-    <!-- PEMBAYARAN LAMA -->
+    <!-- Pembayaran Section -->
+    <section id="pembayaran" class="py-20 px-4" style="background: var(--bg-secondary);">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-4">Pembayaran</h2>
+                <p class="reveal max-w-2xl mx-auto" style="color: var(--muted);">Pilih metode pembayaran untuk posting lowongan kerja atau paket endorse & iklan.</p>
+            </div>
 
-    <!-- KONFIRMASI LAMA -->
+            <!-- Tabs -->
+            <div class="reveal flex flex-wrap justify-center gap-2 mb-8 border-b" style="border-color: var(--border);">
+                <button class="tab-btn active" data-tab="transfer">Transfer Bank</button>
+                <button class="tab-btn" data-tab="ewallet">E-Wallet</button>
+                <button class="tab-btn" data-tab="qris">QRIS</button>
+            </div>
 
-    <!-- FAQ LAMA -->
+            <!-- Transfer Bank -->
+            <div id="transfer" class="tab-content active">
+                <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <!-- BCA -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: #0066AE;">
+                                <span class="font-bold text-white text-sm">BCA</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Bank BCA</h4>
+                                <p class="text-sm" style="color: var(--muted);">a.n. Hendra Wijaya</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg);">
+                            <span class="font-mono text-lg">7870691038</span>
+                            <button class="btn-copy" onclick="copyToClipboard('7870691038')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                                Salin
+                            </button>
+                        </div>
+                    </div>
 
-    <!-- JAVASCRIPT LAMA -->
+                    <!-- BRI -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: #00529C;">
+                                <span class="font-bold text-white text-sm">BRI</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Bank BRI</h4>
+                                <p class="text-sm" style="color: var(--muted);">a.n. Hendra Wijaya</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg);">
+                            <span class="font-mono text-lg">027501042792501</span>
+                            <button class="btn-copy" onclick="copyToClipboard('027501042792501')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                                Salin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- E-Wallet -->
+            <div id="ewallet" class="tab-content">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                    <!-- DANA -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: #108EE9;">
+                                <span class="font-bold text-white text-xs">DANA</span>
+                            </div>
+                            <h4 class="font-bold">DANA</h4>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg);">
+                            <span class="font-mono">082294952008</span>
+                            <button class="btn-copy" onclick="copyToClipboard('082294952008')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                                Salin
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GoPay -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: #00AED6;">
+                                <span class="font-bold text-white text-xs">GoPay</span>
+                            </div>
+                            <h4 class="font-bold">GoPay</h4>
+                        </div>
+                        <div class="p-3 rounded-lg text-center" style="background: var(--bg);">
+                            <p class="text-sm" style="color: var(--muted);">Scan QRIS untuk pembayaran</p>
+                        </div>
+                    </div>
+
+                    <!-- OVO -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: #4C3494;">
+                                <span class="font-bold text-white text-xs">OVO</span>
+                            </div>
+                            <h4 class="font-bold">OVO</h4>
+                        </div>
+                        <div class="p-3 rounded-lg text-center" style="background: var(--bg);">
+                            <p class="text-sm" style="color: var(--muted);">Scan QRIS untuk pembayaran</p>
+                        </div>
+                    </div>
+
+                    <!-- ShopeePay -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: #EE4D2D;">
+                                <span class="font-bold text-white text-xs">Shopee</span>
+                            </div>
+                            <h4 class="font-bold">ShopeePay</h4>
+                        </div>
+                        <div class="p-3 rounded-lg text-center" style="background: var(--bg);">
+                            <p class="text-sm" style="color: var(--muted);">Scan QRIS untuk pembayaran</p>
+                        </div>
+                    </div>
+
+                    <!-- Virgo -->
+                    <div class="reveal bank-item">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                                <span class="font-bold text-white text-xs">Virgo</span>
+                            </div>
+                            <h4 class="font-bold">Virgo</h4>
+                        </div>
+                        <div class="p-3 rounded-lg text-center" style="background: var(--bg);">
+                            <p class="text-sm" style="color: var(--muted);">Scan QRIS untuk pembayaran</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QRIS -->
+            <div id="qris" class="tab-content">
+                <div class="max-w-2xl mx-auto text-center">
+                    <div class="reveal card p-8">
+                        <h3 class="text-xl font-bold mb-2">QRIS Resmi LokerBangkoid</h3>
+                        <p class="mb-6" style="color: var(--muted);">Scan QR Code di bawah untuk pembayaran via QRIS</p>
+                        
+                        <div class="qris-container mb-6">
+                            <img src="https://image2url.com/images/1759307037740-8e665aac-6fa8-47d2-bde5-4acca816fce3.jpg" alt="QRIS LokerBangkoid" class="w-64 h-64 object-contain mx-auto">
+                        </div>
+                        
+                        <p class="text-sm mb-4" style="color: var(--muted);">Didukung oleh semua aplikasi pembayaran:</p>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">BCA Mobile</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">BRI Mobile</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">DANA</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">GoPay</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">OVO</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">ShopeePay</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background: var(--bg); border: 1px solid var(--border);">LinkAja</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Konfirmasi Section -->
+    <section id="konfirmasi" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-4">Konfirmasi Pembayaran</h2>
+                <p class="reveal" style="color: var(--muted);">Setelah melakukan pembayaran, konfirmasi melalui WhatsApp</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Cara Konfirmasi -->
+                <div class="reveal card p-6">
+                    <h3 class="text-xl font-bold mb-6">Langkah Konfirmasi</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: var(--accent); color: var(--bg);">
+                                <span class="font-bold text-sm">1</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Pilih Layanan & Bayar</h4>
+                                <p class="text-sm" style="color: var(--muted);">Pilih posting lowongan atau paket endorse & iklan, lalu lakukan pembayaran.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: var(--accent); color: var(--bg);">
+                                <span class="font-bold text-sm">2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Screenshot Bukti Bayar</h4>
+                                <p class="text-sm" style="color: var(--muted);">Ambil screenshot bukti transfer atau pembayaran</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: var(--accent); color: var(--bg);">
+                                <span class="font-bold text-sm">3</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Kirim ke WhatsApp</h4>
+                                <p class="text-sm" style="color: var(--muted);">Kirim bukti bayar + informasi lowongan atau materi promosi ke WhatsApp kami</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: var(--accent); color: var(--bg);">
+                                <span class="font-bold text-sm">4</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Pesanan Diproses</h4>
+                                <p class="text-sm" style="color: var(--muted);">Tim kami akan memproses dan menjadwalkan pesanan sesuai layanan yang dipilih.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info untuk Dikirim -->
+                <div class="reveal card p-6">
+                    <h3 class="text-xl font-bold mb-6">Info yang Dibutuhkan</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-lg" style="background: var(--bg);">
+                            <div class="flex items-center gap-3 mb-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <span class="font-medium">Nama Pengirim</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--muted);">Nama lengkap untuk konfirmasi</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background: var(--bg);">
+                            <div class="flex items-center gap-3 mb-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <span class="font-medium">Layanan yang Dipilih</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--muted);">Contoh: Posting Lowongan Rp25.000 / Paket Growth</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background: var(--bg);">
+                            <div class="flex items-center gap-3 mb-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <span class="font-medium">Bukti Pembayaran</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--muted);">Screenshot bukti transfer</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background: var(--bg);">
+                            <div class="flex items-center gap-3 mb-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <span class="font-medium">Materi Iklan</span>
+                            </div>
+                            <p class="text-sm" style="color: var(--muted);">Caption, gambar, dan info lowongan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA WhatsApp -->
+            <div class="reveal text-center mt-12">
+                <a href="https://wa.link/g2qgmc" target="_blank" class="btn-primary text-lg px-8 py-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Kirim Konfirmasi via WhatsApp
+                </a>
+                <p class="mt-4 text-sm" style="color: var(--muted);">Respon cepat dalam 1x24 jam</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- QRIS Endorse Section -->
+    <section class="py-16 px-4" style="background: var(--bg-secondary);">
+        <div class="max-w-4xl mx-auto">
+            <div class="reveal card p-8 text-center">
+                <h3 class="text-2xl font-bold mb-4">QRIS untuk Pembayaran Paket</h3>
+                <p class="mb-6" style="color: var(--muted);">Scan QRIS di bawah untuk pembayaran paket endorse</p>
+                
+                <div class="qris-container inline-block mb-6">
+                    <img src="https://image2url.com/images/1759310924177-b6117ad1-ff86-403d-9d4b-b9bf9b29fc50.jpg" alt="QRIS Paket Endorse" class="w-72 h-72 object-contain">
+                </div>
+                
+                <p class="text-sm" style="color: var(--muted);">QRIS Resmi LokerBangkoid</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-4">Pertanyaan Umum</h2>
+                <p class="reveal" style="color: var(--muted);">Jawaban untuk pertanyaan yang sering diajukan</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Berapa harga posting lowongan kerja?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Tarif posting lowongan kerja adalah <strong>Rp25.000 per lowongan</strong>. Harga tersebut sudah termasuk 1× Feed Instagram dan 1× Story selama 24 jam. Postingan feed tetap tersedia setelah diposting.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Apakah Rp25.000 termasuk endorse produk?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Tidak. Tarif Rp25.000 khusus untuk posting informasi lowongan kerja. Untuk promosi produk, jasa, brand, UMKM, event, dan kebutuhan iklan lainnya tersedia paket Endorse & Iklan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Kalau lowongan ingin tetap ada selama 1 minggu bagaimana?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Untuk posting lowongan kerja, tarif tetap Rp25.000. Feed yang sudah diposting tetap tersedia setelah dipublikasikan. Jika ingin mendapatkan promosi berulang selama beberapa hari melalui beberapa kali Story atau Feed, dapat menggunakan layanan promosi tambahan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Apakah bisa request jadwal posting?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Ya, Anda bisa request jadwal posting yang diinginkan. Silakan sampaikan preferensi jadwal saat konfirmasi pembayaran melalui WhatsApp. Jadwal mengikuti antrean dan ketersediaan posting.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Bagaimana jika ingin revisi konten?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Revisi konten bisa dilakukan sebelum posting dipublikasikan. Untuk posting lowongan, pemasang menyiapkan materi dan informasi lowongan yang akan dipublikasikan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Metode pembayaran apa saja yang tersedia?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Kami menerima pembayaran via Transfer Bank (BCA, BRI), DANA, dan QRIS yang dapat digunakan melalui berbagai aplikasi pembayaran.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Apakah ada garansi iklan tayang?</span>
+                        <svg class="accordion-icon transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5" style="color: var(--muted);">
+                            Pesanan diproses setelah pembayaran dan materi diterima. Jika ada kendala terkait jadwal atau publikasi, tim kami akan menghubungi Anda melalui WhatsApp.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4" style="background: var(--bg-secondary); border-top: 1px solid var(--border);">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">
+                        <span style="color: var(--accent);">Loker</span>Bangkoid
+                    </h4>
+                    <p style="color: var(--muted);">Media informasi lowongan kerja dan promosi melalui Instagram @lokerbangkoid untuk menjangkau pencari kerja dan audiens lokal.</p>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4">Navigasi</h5>
+                    <div class="space-y-2">
+                        <a href="#loker" class="block hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">Posting Loker</a>
+                        <a href="#endorse" class="block hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">Endorse & Iklan</a>
+                        <a href="#pembayaran" class="block hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">Pembayaran</a>
+                        <a href="#konfirmasi" class="block hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">Konfirmasi</a>
+                        <a href="#faq" class="block hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">FAQ</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4">Hubungi Kami</h5>
+                    <div class="space-y-3">
+                        <a href="https://wa.link/g2qgmc" target="_blank" class="flex items-center gap-2 hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                            WhatsApp
+                        </a>
+                        <a href="https://www.instagram.com/lokerbangkoid/" target="_blank" class="flex items-center gap-2 hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            Instagram
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61556746500283" target="_blank" class="flex items-center gap-2 hover:text-[var(--accent)] transition-colors" style="color: var(--muted);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center pt-8" style="border-top: 1px solid var(--border);">
+                <p style="color: var(--muted);">
+                    &copy; 2024 LokerBangkoid. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.link/g2qgmc" target="_blank" class="wa-float" aria-label="Chat WhatsApp">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
+
+    <script>
+        // Initialize particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Berhasil disalin: ' + text);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Berhasil disalin: ' + text);
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Accordion functionality
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+            
+            // Close all accordions
+            document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+            document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+            
+            // Open clicked accordion if it was closed
+            if (!isOpen) {
+                content.classList.add('open');
+                header.classList.add('active');
+            }
+        }
+
+        // Scroll reveal
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            const windowHeight = window.innerHeight;
+            
+            reveals.forEach(reveal => {
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.classList.add('visible');
+                }
+            });
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            revealOnScroll();
+        });
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Respect reduced motion
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.querySelectorAll('.particle').forEach(p => p.remove());
+        }
+    </script>
 </body>
 </html>
